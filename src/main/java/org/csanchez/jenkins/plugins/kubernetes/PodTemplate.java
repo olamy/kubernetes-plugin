@@ -1,5 +1,7 @@
 package org.csanchez.jenkins.plugins.kubernetes;
 
+import hudson.Functions;
+import hudson.model.Node;
 import hudson.tools.ToolLocationNodeProperty;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +39,8 @@ public class PodTemplate extends AbstractDescribableImpl<PodTemplate> {
     private String inheritFrom;
 
     private String name;
+
+    private Node.Mode mode;
 
     private transient String image;
 
@@ -95,6 +99,7 @@ public class PodTemplate extends AbstractDescribableImpl<PodTemplate> {
         this.setNodeSelector(from.getNodeSelector());
         this.setServiceAccount(from.getServiceAccount());
         this.setVolumes(from.getVolumes());
+        this.setMode( from.getMode() );
     }
 
     @Deprecated
@@ -181,7 +186,16 @@ public class PodTemplate extends AbstractDescribableImpl<PodTemplate> {
         return getFirstContainer().map(ContainerTemplate::getWorkingDir).orElse(null);
     }
 
-    public void setInstanceCap(int instanceCap) {
+    public Node.Mode getMode() {
+        return mode;
+    }
+
+    @DataBoundSetter
+    public void setMode( Node.Mode mode ) {
+        this.mode = mode;
+    }
+
+    public void setInstanceCap( int instanceCap) {
         if (instanceCap <= 0) {
             this.instanceCap = Integer.MAX_VALUE;
         } else {
@@ -443,5 +457,11 @@ public class PodTemplate extends AbstractDescribableImpl<PodTemplate> {
         public String getDisplayName() {
             return "Kubernetes Pod Template";
         }
+
+
+        public Node.Mode[] getModeNames() {
+            return Functions.getNodeModes();
+        }
+
     }
 }

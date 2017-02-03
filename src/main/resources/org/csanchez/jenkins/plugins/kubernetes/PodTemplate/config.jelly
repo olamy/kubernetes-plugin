@@ -13,6 +13,8 @@
     <f:textbox/>
   </f:entry>
 
+  <f:slave-mode name="mode" node="${it}" />
+
   <f:entry field="inheritFrom" title="The name of the pod template to inherit from">
     <f:textbox/>
   </f:entry>
